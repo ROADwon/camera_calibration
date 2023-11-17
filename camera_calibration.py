@@ -112,8 +112,36 @@ retval, rvec, tvec = cv.solvePnP(vector_3D, vector_2D,matrix,dist,rvec=None,tvec
 R = cv.Rodrigues(rvec)
 R = R[0]
 t = tvec
+Fx = matrix[0][0]
+Fy = matrix[1][1]
+cx = matrix[0][-1]
+cy = matrix[1][-1]
+
+x,y = pts[3]
 
 print("=================================\n")
 print("===R value : \n",R)
 print("===t value : \n",t)
+print("===x,y point : ",x,y)
 print("=================================\n")
+
+
+u = (x - cx)/Fx
+v = (y - cy)/Fy
+
+Pc = np.array([[u,v,1]]).T 
+Cc = np.array([[0,0,0]]).T
+
+
+Rt = R.T 
+#Pc- t = k로 선언 하겠음.
+k = (Pc-t)
+# -t = i로 선언 하겠음
+i = (-t)
+Pw = np.dot(Rt,k)
+Cw = np.dot(Rt,i)
+
+k = Cw[2] / (Pw[2]-Cw[2])
+
+print("P in worlds : \n",Pw)
+print("C in worlds : \n",Cw)
