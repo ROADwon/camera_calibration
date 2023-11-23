@@ -17,7 +17,7 @@ objpoints = []
 imgpoints = []
 pts_cnt = 0
 pts = np.zeros((4,2),dtype=np.float32)
-images = glob.glob(f'{img_path}*.jpg')
+images = glob.glob(f'{img_path}*.png')
 image_2D = cv.imread("2D_1.jpg")
 image_2D_c = image_2D.copy()
 
@@ -77,11 +77,9 @@ for file in images:
 cv.destroyAllWindows()
 
 
-h, w= img.shape[:2]
+#h, w= img.shape[:2]
 
 ret, matrix, dist, rvecs, tvecs = cv.calibrateCamera(objpoints,imgpoints,g_scale.shape[::-1],None,None)
-
-
 
 T = tvecs
 
@@ -142,6 +140,9 @@ Pw = np.dot(Rt,k)
 Cw = np.dot(Rt,i)
 
 k = Cw[2] / (Pw[2]-Cw[2])
+k1 = k[0]
+P = Cw+k1*(Pw-Cw)
 
-print("P in worlds : \n",Pw)
-print("C in worlds : \n",Cw)
+# print("P in worlds : \n",Pw)
+# print("C in worlds : \n",Cw)
+print(P)

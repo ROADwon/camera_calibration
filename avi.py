@@ -5,10 +5,10 @@ import matplotlib.pyplot as plt
 from scipy.sparse.linalg import svds
 from scipy.linalg import svd
 
-img1 = cv.imread('3.jpg',0)
+img1 = cv.imread('000117.png',0)
 img1 = cv.resize(img1,(400,400))
 
-img2 = cv.imread('4.jpg',0)
+img2 = cv.imread('000118.png',0)
 img2 = cv.resize(img2,(400,400))
 
 sift = cv.SIFT_create()
@@ -75,16 +75,16 @@ U_tr, sigma_tr, V_tr = svds(F, k=2)
 matrix_tr = np.dot(np.dot(U_tr,np.diag(sigma_tr)),V_tr)
 print("==========Truncated Matrix==========")
 print(matrix_tr)
-tri = cv.triangulatePoints(matrix_tr)
+#tri = cv.triangulatePoints(matrix_tr)
 
 print("============= Triangulate ============")
-print(tri)
-# cv.imshow('left image with line', img_1)
-# cv.imshow('left image with point', img_2)
-# cv.imshow('right image with line', img_3)
-# cv.imshow('right image with point',img_4)
-# cv.imwrite('epipole1.jpg',img_1)
-# cv.imwrite('epipole2.jpg',img_3)
+#print(tri)
+cv.imshow('left image with line', img_1)
+cv.imshow('left image with point', img_2)
+cv.imshow('right image with line', img_3)
+cv.imshow('right image with point',img_4)
+cv.imwrite('epipole1.jpg',img_1)
+cv.imwrite('epipole2.jpg',img_3)
 cv.waitKey(0)
 cv.destroyAllWindows()
     
