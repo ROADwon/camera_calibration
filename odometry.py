@@ -9,7 +9,7 @@ kMinNumFeature = 1500
 
 lk_params = dict(winSize  = (21, 21), 
 				maxLevel = 2,
-             	criteria = (cv.TERM_CRITERIA_EPS + cv.TERM_CRITERIA_MAX_ITER, 28, 0.001))
+             	criteria = (cv.TERM_CRITERIA_COUNT + cv.TERM_CRITERIA_MAX_ITER, 30, 0.001))
 
 def featureTracking(image_ref, image_cur, px_ref):
 	kp2, st, err = cv.calcOpticalFlowPyrLK(image_ref, image_cur, px_ref, None, **lk_params)  #shape: [k,2] [k,1] [k,1]
@@ -77,7 +77,7 @@ class VisualOdometry:
     def processSecondFrame(self):
         self.px_ref, self.px_cur = featureTracking(self.last_frame, self.new_frame, self.px_ref)
         E, mask = cv.findEssentialMat(self.px_cur, self.px_ref, focal=self.focal, pp=self.pp, method=cv.FM_RANSAC,
-                                      prob=0.999, threshold=.1)
+                                      prob=0.999, threshold=1)
         if E is not None:
             print("E mat:",E)
             print("shape E: ",E.shape)   
@@ -92,8 +92,8 @@ class VisualOdometry:
 
     def processFrame(self, frame_id):
         self.px_ref, self.px_cur = featureTracking(self.last_frame, self.new_frame, self.px_ref)
-        E, mask = cv.findEssentialMat(self.px_cur, self.px_ref, focal=self.focal, pp=self.pp, method=cv.RANSAC,
-                                      prob=0.999, threshold=1.0)
+        E, mask = cv.findEssentialMat(self.px_cur, self.px_ref, focal=self.focal, pp=self.pp, method=cv.FM_RANSAC,
+                                      prob=0.999, threshold=1)
         _, R, t, mask = cv.recoverPose(E, self.px_cur, self.px_ref, focal=self.focal, pp=self.pp)
         abs_scale = self.getAbsScale(frame_id)
         if abs_scale > 0.1:
